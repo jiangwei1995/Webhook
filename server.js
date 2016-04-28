@@ -1,6 +1,6 @@
 var http = require('http'), 
     exec = require('exec'),
-    config = reuqire('./config.json'),
+    config = require('./config.json'),
     createHandler = require('github-webhook-handler'),
     handler = createHandler({ path: config.webpath, secret: config.secret }); //github => webhook配置的secret
     
