@@ -1,11 +1,12 @@
 var http = require('http'), 
     exec = require('exec'),
+    config = reuqire('./config.json'),
     createHandler = require('github-webhook-handler'),
-    handler = createHandler({ path: '/', secret: 'jiangwei123' });
+    handler = createHandler({ path: config.webpath, secret: config.secret }); //github => webhook配置的secret
     
-
-const PORT = 1337
-  , PATH = '../home.io'
+//端口号和服务器源码路径
+const PORT = config.port,
+      commands = config.commands.join(' && ');
 
 http.createServer(function (req, res) {
   handler(req, res, function (err) {
@@ -19,23 +20,17 @@ handler.on('error', function (err) {
 })
 
 handler.on('push', function (event) {
-  var commands = [
-      'cd ' + PATH,
-      'git pull'
-    ].join(' && ')
-
+  //进入文件夹执行pull命令
     exec(commands, function(err, out, code) {
       if (err instanceof Error) {
-        response.writeHead(500)
-        response.end('Server Internal Error.')
-        throw err
+	throw err
       }
       process.stderr.write(err)
       process.stdout.write(out)
     })
-  console.log('Received a push event for %s to %s',
-    event.payload.repository.name,
-    event.payload.ref)
+    console.log('Received a push event for %s to %s',
+      event.payload.repository.name,
+      event.payload.ref)
 })
 
 handler.on('issues', function (event) {

@@ -1,0 +1,6 @@
+{
+  "secret":"jiangwei123",
+  "webpath":"/",
+  "port":1337,
+  "commands":["cd ../home.io","git pull"]
+}
