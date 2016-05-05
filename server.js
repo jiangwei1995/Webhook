@@ -16,7 +16,9 @@ http.createServer(function (req, res) {
     res.statusCode = 404
     res.end('no such location')
   })
-}).listen(PORT);
+}).listen(PORT,function(){
+  console.log("服务启动成功，监听端口："+PORT);
+});
 
 handler.on('error', function (err) {
   ThrowError(err.message);
