@@ -23,13 +23,13 @@ handler.on('error', function (err) {
 })
 
 handler.on('push', function (event) {
-  accessLogfile.write(`${new Date()} -- 提交人：${pusher.username} -- 执行：${action}  -- 任务id：${id}\n`);
+
   //进入文件夹执行pull命令
     var pusher = event.pusher
         ,url = event.url
         ,id = event.id
         ,action = event.event;
-
+        accessLogfile.write(`${new Date()} -- 提交人：${pusher.username} -- 执行：${action}  -- 任务id：${id}\n`);
         var project = checkProject(url);
         var isy = checkPusher(project, pusher);
         if(isy){
