@@ -25,7 +25,7 @@ handler.on('error', function (err) {
 handler.on('push', function (event) {
 
   //进入文件夹执行pull命令
-    var pusher = event.pusher
+    var pusher = event.payload.pusher
         ,url = event.url
         ,id = event.id
         ,action = event.event;
