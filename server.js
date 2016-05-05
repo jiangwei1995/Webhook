@@ -67,7 +67,6 @@ function checkProject(url){
 }
 
 function  checkPusher(project, pusher){
-  ThrowError('没有配置项目')
   if (typeof project != 'object')
     ThrowError('没有配置项目')
   if (typeof project.pusher != 'object')
