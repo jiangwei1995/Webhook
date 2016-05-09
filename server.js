@@ -9,7 +9,7 @@ var http = require('http'),
     handler = createHandler({ path: config.webpath, secret: config.secret }); //github => webhook配置的secret
 
 //端口号和服务器源码路径
-const PORT = config.port;
+const PORT = process.env.PORT || config.port;
 
 http.createServer(function (req, res) {
   handler(req, res, function (err) {
@@ -31,7 +31,7 @@ handler.on('push', function (event) {
         ,url = event.url
         ,id = event.id
         ,action = event.event;
-        accessLogfile.write(`${new Date()} -- 提交人：${pusher.name} -- 执行：${action}  -- 任务id：${id}\n`);
+        accessLogfile.write(`${new Date().Format("yyyy-MM-dd hh:mm")} --项目名称：${event.payload.repository.full_name} -- 提交人：${pusher.name} -- 执行：${action}  -- 任务id：${id}\n`);
         var project = checkProject(url);
         var isy = checkPusher(project, pusher);
         if(isy){
@@ -39,7 +39,7 @@ handler.on('push', function (event) {
             if (err instanceof Error) {
       	      ThrowError(err.message);
             }
-            accessLogfile.write(`${new Date()} -- 提交人：${pusher.name} -- 执行：${action}  -- 任务id：${id} -- 状态：成功\n`);
+            accessLogfile.write(`${new Date().Format("yyyy-MM-dd hh:mm")}--项目名称：${event.payload.repository.full_name} -- 提交人：${pusher.name} -- 执行：${action}  -- 任务id：${id} -- 状态：成功\n`);
             process.stderr.write(err)
             process.stdout.write(out)
           })
@@ -95,3 +95,17 @@ handler.on('issues', function (event) {
     event.payload.issue.number,
     event.payload.issue.title)
 })
+
+Date.prototype.Format = function (fmt) {
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "h+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds() //秒
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
